@@ -1,90 +1,33 @@
-import java.util.ArrayList;
-import java.util.List;
-
-class Solution {
-
+import java.util.*;
+class palindromepartition {
     List<List<String>> result;
-
     public List<List<String>> partition(String s) {
-
         result = new ArrayList<>();
-
-       helper(s, 0, 0,new ArrayList<>());
-
+        backtrack(s, 0, new ArrayList<>());
         return result;
-
     }
-
-    private void helper(String s, int pivot, int i, List<String> path){
-
-       // base
-
-        if(i == s.length()){
-
-            if(pivot == s.length()){
-
-                result.add(new ArrayList<>(path));
-
-            }
-
-            return;
-
+    private void backtrack(String s,int start, List<String> temp){
+        // base case
+        if(start >= s.length()){
+            result.add(new ArrayList<>(temp));
         }
-
-        //logic
-
-        //dont choose
-
-        helper(s, pivot, i+1, path);
-
-        //choose
-
-            String sub = s.substring(pivot, i+1);
-
-          if(isPalindrome(sub)){
-
-              //action
-
-            path.add(sub);
-
-            //recurse
-
-              helper(s, i+1, i+1, path);
-
-            //backtrack
-
-              path.remove(path.size() - 1);
-
-          }
-
-            
-
-      
-
-    }
-
-    private boolean isPalindrome(String s){
-
-            int start=0;
-
-            int end=s.length()-1;
-
-            while(start<end){
-
-                if(s.charAt(start)!=s.charAt(end))
-
-                    return false;
-
-                start++;
-
-                end--;
-
+        // logic
+        for(int i = start; i < s.length(); i++){
+            if(isPalindrome(s, start, i)){
+                temp.add(s.substring(start, i+1));
+                backtrack(s, i+1, temp); // 'a'  'ab' ['a''b'] ['ab']
+                // backtrack
+                temp.remove(temp.size() - 1);
             }
-
-            return true;
-
+        }
     }
 
-    
-
+    private boolean isPalindrome(String s, int l, int r){
+        if(l==r) return true;
+        while(l < r){
+            if(s.charAt(l) != s.charAt(r)) return false;
+            l++; r--;
+        }
+        return true;
+    }
 }
